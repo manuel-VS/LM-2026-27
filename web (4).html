@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Respira</title>
+  <style>
+    /* ===== Paleta: plata y metal ===== */
+    :root {
+      --fondo: #eceef0;
+      --fondo-2: #dfe2e5;
+      --metal-claro: #f7f8f9;
+      --metal-medio: #b4b9be;
+      --metal-oscuro: #6c7278;
+      --grafito: #2b2e32;
+      --acento: #8a9199;
+      --p: 0;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      color: var(--grafito);
+      background: linear-gradient(160deg, var(--metal-claro) 0%, var(--fondo) 45%, var(--fondo-2) 100%);
+      background-attachment: fixed;
+    }
+
+    /* ===== Menú (cinta metálica) ===== */
+    nav { width: 100%; margin-bottom: 4rem; }
+
+    nav ul {
+      position: relative;
+      list-style: none;
+      margin: 0;
+      padding: 0 1.5rem;
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 0.5rem 2.5rem;
+      background:
+        linear-gradient(100deg,
+          transparent 0%, rgba(255,255,255,0.55) 24%, transparent 38%,
+          transparent 58%, rgba(255,255,255,0.4) 70%, transparent 84%),
+        repeating-linear-gradient(90deg,
+          rgba(255,255,255,0.10) 0 1px,
+          rgba(0,0,0,0.045) 1px 2px,
+          rgba(255,255,255,0.03) 2px 4px),
+        linear-gradient(180deg,
+          #fdfdfe 0%, #e9ebed 12%, #c3c7cc 45%,
+          #a2a8ae 52%, #b9bec3 70%, #dfe2e5 92%, #f1f2f4 100%);
+      border-top: 1px solid #ffffff;
+      border-bottom: 1px solid #6f757b;
+      box-shadow:
+        0 1px 0 #ffffff inset,
+        0 -1px 0 rgba(0,0,0,0.12) inset,
+        0 2px 0 #8d9399,
+        0 8px 18px rgba(30, 34, 38, 0.28);
+    }
+
+    nav ul::before,
+    nav ul::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      width: 12px;
+      height: 12px;
+      margin-top: -6px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #ffffff 0%, #d6d9dd 30%, #858b91 75%, #5f656b 100%);
+      box-shadow: 0 1px 1px rgba(255,255,255,0.9), inset 0 -1px 2px rgba(0,0,0,0.35);
+    }
+    nav ul::before { left: 0.6rem; }
+    nav ul::after  { right: 0.6rem; }
+
+    nav li a {
+      display: block;
+      padding: 1.1rem 0.25rem;
+      color: var(--metal-oscuro);
+      text-decoration: none;
+      font-size: 0.95rem;
+      letter-spacing: 0.04em;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    nav li a:hover,
+    nav li a:focus-visible,
+    nav li a[aria-current="page"] {
+      color: var(--grafito);
+      border-bottom-color: var(--acento);
+    }
+
+    nav li a:focus-visible {
+      outline: 2px solid var(--acento);
+      outline-offset: 2px;
+    }
+
+    /* ===== Secciones ===== */
+    main { width: 100%; }
+    section[hidden] { display: none; }
+
+    .seccion {
+      width: 100%;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1.25rem 5rem;
+    }
+
+    /* ===== Título metálico ===== */
+    h1 {
+      margin: 0;
+      padding: 0 1rem;
+      font-size: clamp(3rem, 10vw, 6.5rem);
+      font-weight: 200;
+      letter-spacing: 0.06em;
+      text-align: center;
+      line-height: 1.1;
+      background: linear-gradient(100deg, #5d6369 0%, #aeb3b8 25%, #f4f5f6 45%, #9aa0a6 60%, #585e64 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      color: transparent;
+      filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.8));
+    }
+
+    h2 {
+      margin: 0 0 0.5rem;
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 200;
+      letter-spacing: 0.05em;
+      text-align: center;
+      color: var(--grafito);
+    }
+
+    h4 {
+      margin: 1rem 0 0;
+      padding: 0 1rem;
+      font-size: 1.1rem;
+      font-weight: 300;
+      letter-spacing: 0.08em;
+      text-align: center;
+      color: var(--metal-oscuro);
+    }
+
+    .intro {
+      max-width: 560px;
+      margin: 0 auto 3rem;
+      text-align: center;
+      line-height: 1.6;
+      color: var(--metal-oscuro);
+    }
+
+    /* ===== Imagen ===== */
+    .hero img {
+      display: block;
+      max-width: min(420px, 85%);
+      height: auto;
+      margin: 3rem auto 4rem;
+      filter: grayscale(0.4) contrast(1.05) drop-shadow(0 10px 18px rgba(40, 45, 50, 0.22));
+    }
+
+    /* ===== Lista de viajes (botones) ===== */
+    .viajes {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .viaje-boton {
+      display: block;
+      width: 100%;
+      padding: 1.6rem 1.4rem;
+      text-align: left;
+      font: inherit;
+      color: var(--grafito);
+      cursor: pointer;
+      border: 1px solid #6f757b;
+      border-radius: 4px;
+      background:
+        linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.5) 30%, transparent 48%),
+        linear-gradient(180deg, #fdfdfe 0%, #dfe2e5 50%, #bfc4c9 100%);
+      box-shadow: 0 1px 0 #fff inset, 0 3px 8px rgba(30,34,38,0.25);
+      transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .viaje-boton:hover { transform: translateY(-2px); box-shadow: 0 1px 0 #fff inset, 0 8px 16px rgba(30,34,38,0.3); }
+    .viaje-boton:active { transform: translateY(1px); box-shadow: 0 1px 0 #fff inset, 0 1px 3px rgba(30,34,38,0.3); }
+    .viaje-boton:focus-visible { outline: 2px solid var(--grafito); outline-offset: 3px; }
+
+    .viaje-boton strong { display: block; font-size: 1.25rem; font-weight: 300; letter-spacing: 0.04em; }
+    .viaje-boton span { display: block; margin-top: 0.3rem; font-size: 0.9rem; color: var(--metal-oscuro); }
+
+    /* ===== Detalle del viaje (menú de fotos) ===== */
+    .volver {
+      margin: 0 0 1.5rem;
+      padding: 0;
+      border: 0;
+      background: none;
+      font: inherit;
+      font-size: 0.95rem;
+      color: var(--metal-oscuro);
+      cursor: pointer;
+      border-bottom: 1px solid transparent;
+    }
+    .volver:hover { color: var(--grafito); border-bottom-color: var(--acento); }
+    .volver:focus-visible { outline: 2px solid var(--acento); outline-offset: 3px; }
+
+    .datos {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 0.5rem 2rem;
+      margin: 0 0 2.5rem;
+      padding: 0;
+      font-size: 0.95rem;
+    }
+    .datos div { text-align: center; }
+    .datos dt { color: var(--metal-oscuro); font-size: 0.85rem; }
+    .datos dd { margin: 0.15rem 0 0; }
+
+    .galeria {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .foto {
+      position: relative;
+      aspect-ratio: 4 / 3;
+      padding: 0;
+      overflow: hidden;
+      cursor: zoom-in;
+      border: 1px solid #c3c7cc;
+      border-radius: 4px;
+      background: #d5d8dc;
+      box-shadow: 0 8px 18px rgba(30, 34, 38, 0.18);
+    }
+    .foto:focus-visible { outline: 2px solid var(--grafito); outline-offset: 3px; }
+    .foto img { width: 100%; height: 100%; object-fit: cover; display: block; margin: 0; max-width: none; filter: none; transition: transform 0.3s ease; }
+    .foto:hover img { transform: scale(1.04); }
+
+    .foto-vacia {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: var(--metal-oscuro);
+      cursor: default;
+    }
+
+    .accion { text-align: center; }
+    .accion .enviar { width: auto; padding: 0.85rem 2rem; }
+
+    dialog.visor {
+      width: min(92vw, 1000px);
+      padding: 0;
+      border: 0;
+      background: transparent;
+      overflow: visible;
+    }
+    dialog.visor::backdrop { background: rgba(30, 34, 38, 0.82); }
+    dialog.visor img { display: block; width: 100%; max-height: 82vh; object-fit: contain; margin: 0; max-width: none; filter: none; border-radius: 4px; }
+    dialog.visor button {
+      margin: 0.75rem auto 0;
+      display: block;
+      padding: 0.6rem 1.4rem;
+      font: inherit;
+      color: var(--grafito);
+      cursor: pointer;
+      border: 1px solid #6f757b;
+      border-radius: 3px;
+      background: linear-gradient(180deg, #fdfdfe 0%, #b9bec3 100%);
+    }
+
+    /* ===== Formulario ===== */
+    .formulario {
+      max-width: 520px;
+      margin: 0 auto;
+      padding: 2rem;
+      border-radius: 4px;
+      background: linear-gradient(180deg, #fdfdfe 0%, #e4e7ea 100%);
+      border: 1px solid #c3c7cc;
+      box-shadow: 0 1px 0 #fff inset, 0 8px 18px rgba(30, 34, 38, 0.14);
+    }
+
+    .campo { margin-bottom: 1.25rem; }
+
+    .campo label {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-size: 0.9rem;
+      color: var(--metal-oscuro);
+    }
+
+    .campo input,
+    .campo select,
+    .campo textarea {
+      width: 100%;
+      padding: 0.7rem 0.8rem;
+      font: inherit;
+      color: var(--grafito);
+      background: #f7f8f9;
+      border: 1px solid var(--metal-medio);
+      border-radius: 3px;
+      box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    }
+
+    .campo textarea { min-height: 90px; resize: vertical; }
+
+    .campo input:focus,
+    .campo select:focus,
+    .campo textarea:focus {
+      outline: 2px solid var(--acento);
+      outline-offset: 1px;
+    }
+
+    .enviar {
+      width: 100%;
+      padding: 0.85rem 1rem;
+      font: inherit;
+      font-size: 1rem;
+      letter-spacing: 0.04em;
+      color: var(--grafito);
+      cursor: pointer;
+      border: 1px solid #6f757b;
+      border-radius: 3px;
+      background: linear-gradient(180deg, #fdfdfe 0%, #d5d8dc 50%, #b9bec3 100%);
+      box-shadow: 0 1px 0 #fff inset, 0 2px 4px rgba(30,34,38,0.25);
+    }
+    .enviar:hover { background: linear-gradient(180deg, #ffffff 0%, #e0e3e6 50%, #c6cacf 100%); }
+    .enviar:focus-visible { outline: 2px solid var(--grafito); outline-offset: 2px; }
+
+    .mensaje-ok {
+      margin: 1.25rem 0 0;
+      padding: 0.9rem 1rem;
+      text-align: center;
+      border-left: 3px solid var(--metal-oscuro);
+      background: #f1f2f4;
+      line-height: 1.5;
+    }
+    .mensaje-ok[hidden] { display: none; }
+
+    /* ===== Sobre nosotros ===== */
+    .texto {
+      max-width: 620px;
+      margin: 0 auto;
+      line-height: 1.7;
+      color: var(--grafito);
+    }
+
+    /* ===== Nubes ===== */
+    .recorrido { width: 100%; height: 100vh; }
+
+    .nube {
+      position: fixed;
+      z-index: 5;
+      top: var(--top);
+      width: var(--w);
+      height: calc(var(--w) * 0.45);
+      pointer-events: none;
+      opacity: calc(0.15 + var(--p) * 0.85);
+      filter: blur(7px) drop-shadow(0 12px 14px rgba(70, 78, 88, 0.25));
+      background:
+        radial-gradient(ellipse 28% 42% at 22% 62%, #ffffff 0 60%, transparent 100%),
+        radial-gradient(ellipse 30% 55% at 40% 45%, #ffffff 0 62%, transparent 100%),
+        radial-gradient(ellipse 34% 62% at 60% 40%, #fbfcfd 0 62%, transparent 100%),
+        radial-gradient(ellipse 28% 48% at 78% 58%, #f1f3f5 0 60%, transparent 100%),
+        radial-gradient(ellipse 60% 30% at 50% 76%, #d9dde1 0 60%, transparent 100%);
+    }
+
+    .nube.izq {
+      left: calc(var(--w) * -1);
+      transform: translateX(calc(var(--p) * var(--go)));
+    }
+
+    .nube.der {
+      right: calc(var(--w) * -1);
+      transform: translateX(calc(var(--p) * var(--go) * -1));
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .nube { display: none; }
+    }
+
+    /* ===== Móvil ===== */
+    @media (max-width: 480px) {
+      nav { margin-bottom: 2.5rem; }
+      nav ul { gap: 0 1.25rem; }
+      nav li a { font-size: 0.85rem; }
+      .formulario { padding: 1.25rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav aria-label="Menú principal">
+  <ul>
+    <li><a href="#inicio">Inicio</a></li>
+    <li><a href="#informacion">Información</a></li>
+    <li><a href="#contacto">Contacto</a></li>
+    <li><a href="#nosotros">Sobre nosotros</a></li>
+  </ul>
+</nav>
+
+<main>
+
+  <!-- INICIO -->
+  <section id="inicio" class="hero">
+    <h1>Respira</h1>
+    <h4>Deja el movil y disfruta</h4>
+    <img src="file:///C:/Users/CampusFP.A10-PC01/Desktop/Manuel/Lenguaje%20de%20Marcas/imagen/image-removebg-preview%20(1).png" alt="">
+
+    <div class="recorrido"></div>
+
+    <div class="nube izq" style="--top: 14vh; --w: 46vw; --go: 78vw;"></div>
+    <div class="nube izq" style="--top: 52vh; --w: 38vw; --go: 62vw;"></div>
+    <div class="nube der" style="--top: 26vh; --w: 42vw; --go: 74vw;"></div>
+    <div class="nube der" style="--top: 62vh; --w: 50vw; --go: 84vw;"></div>
+  </section>
+
+  <!-- INFORMACIÓN: lista de viajes (botones) -->
+  <section id="informacion" class="seccion" hidden>
+    <h2>Nuestros viajes</h2>
+    <p class="intro">Elige un viaje para ver sus fotos y los detalles.</p>
+    <div class="viajes" id="lista-viajes"></div>
+  </section>
+
+  <!-- DETALLE DE UN VIAJE: menú con fotos -->
+  <section id="viaje" class="seccion" hidden>
+    <button class="volver" type="button" id="volver">&larr; Volver a los viajes</button>
+    <h2 id="v-nombre"></h2>
+    <p class="intro" id="v-desc"></p>
+    <dl class="datos" id="v-datos"></dl>
+    <div class="galeria" id="v-fotos"></div>
+    <div class="accion">
+      <button class="enviar" type="button" id="v-pedir">Pedir información de este viaje</button>
+    </div>
+  </section>
+
+  <dialog class="visor" id="visor" aria-label="Foto ampliada">
+    <img id="visor-img" alt="">
+    <button type="button" id="visor-cerrar">Cerrar</button>
+  </dialog>
+
+  <!-- CONTACTO -->
+  <section id="contacto" class="seccion" hidden>
+    <h2>Contacto</h2>
+    <p class="intro">Déjanos tus datos y te escribimos con toda la información del viaje.</p>
+
+    <form class="formulario" id="form-contacto" novalidate>
+      <div class="campo">
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" autocomplete="name" required>
+      </div>
+
+      <div class="campo">
+        <label for="email">Correo electrónico</label>
+        <input type="email" id="email" name="email" autocomplete="email" required>
+      </div>
+
+      <div class="campo">
+        <label for="telefono">Teléfono (opcional)</label>
+        <input type="tel" id="telefono" name="telefono" autocomplete="tel">
+      </div>
+
+      <div class="campo">
+        <label for="destino">Viaje que te interesa</label>
+        <select id="destino" name="destino">
+          <option value="">Elige un viaje</option>
+          <option>Picos de Europa</option>
+          <option>Islandia</option>
+          <option>Isla de Madeira</option>
+          <option>Alpes suizos</option>
+        </select>
+      </div>
+
+      <div class="campo">
+        <label for="mensaje">Mensaje (opcional)</label>
+        <textarea id="mensaje" name="mensaje"></textarea>
+      </div>
+
+      <button class="enviar" type="submit">Enviar mis datos</button>
+      <p class="mensaje-ok" id="ok" role="status" hidden></p>
+    </form>
+  </section>
+
+  <!-- SOBRE NOSOTROS -->
+  <section id="nosotros" class="seccion" hidden>
+    <h2>Sobre nosotros</h2>
+    <p class="intro">Respira nace de una idea sencilla.</p>
+    <div class="texto">
+      <p>Pasamos demasiadas horas mirando una pantalla. Organizamos viajes cortos a lugares tranquilos para que apagues el móvil y vuelvas a fijarte en lo que tienes alrededor.</p>
+      <p>Escríbenos desde la sección de contacto y te ayudamos a elegir el destino que mejor encaje contigo.</p>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var secciones = ['inicio', 'informacion', 'viaje', 'contacto', 'nosotros'];
+    var enlaces = document.querySelectorAll('nav a');
+
+    /* ===== Datos de los viajes =====
+       Pon tus fotos en la carpeta "fotos" junto a este archivo
+       y cambia aquí los nombres si usas otros. */
+    var viajes = [
+      { id: 'picos', nombre: 'Picos de Europa', lugar: 'Asturias, León y Cantabria',
+        desc: 'Rutas de montaña entre refugios y valles, con noches de cielo despejado y sin ruido.',
+        duracion: '4 días', nivel: 'Medio', epoca: 'Junio – septiembre',
+        fotos: ['fotos/picos-1.jpg', 'fotos/picos-2.jpg', 'fotos/picos-3.jpg'] },
+      { id: 'islandia', nombre: 'Islandia', lugar: 'Círculo Dorado y sur de la isla',
+        desc: 'Cascadas, campos de lava y playas de arena negra. Un viaje para caminar y no tener prisa.',
+        duracion: '7 días', nivel: 'Fácil', epoca: 'Mayo – septiembre',
+        fotos: ['fotos/islandia-1.jpg', 'fotos/islandia-2.jpg', 'fotos/islandia-3.jpg'] },
+      { id: 'madeira', nombre: 'Isla de Madeira', lugar: 'Portugal',
+        desc: 'Senderos junto a las levadas, bosque de laurisilva y acantilados sobre el Atlántico.',
+        duracion: '5 días', nivel: 'Fácil – medio', epoca: 'Todo el año',
+        fotos: ['fotos/madeira-1.jpg', 'fotos/madeira-2.jpg', 'fotos/madeira-3.jpg'] },
+      { id: 'alpes', nombre: 'Alpes suizos', lugar: 'Valle de Lauterbrunnen',
+        desc: 'Pueblos sin coches, prados de alta montaña y caminatas con vistas a glaciares.',
+        duracion: '6 días', nivel: 'Medio', epoca: 'Julio – septiembre',
+        fotos: ['fotos/alpes-1.jpg', 'fotos/alpes-2.jpg', 'fotos/alpes-3.jpg'] }
+    ];
+
+    function porId(id) {
+      for (var i = 0; i < viajes.length; i++) if (viajes[i].id === id) return viajes[i];
+      return null;
+    }
+
+    /* ===== Botones de la lista de viajes ===== */
+    var lista = document.getElementById('lista-viajes');
+    viajes.forEach(function (v) {
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'viaje-boton';
+      b.innerHTML = '<strong></strong><span></span>';
+      b.querySelector('strong').textContent = v.nombre;
+      b.querySelector('span').textContent = v.lugar;
+      b.addEventListener('click', function () { location.hash = '#viaje-' + v.id; });
+      lista.appendChild(b);
+    });
+
+    /* ===== Progreso del scroll (nubes) ===== */
+    function actualizar() {
+      var max = root.scrollHeight - window.innerHeight;
+      var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      root.style.setProperty('--p', p.toFixed(4));
+    }
+    window.addEventListener('scroll', actualizar, { passive: true });
+    window.addEventListener('resize', actualizar);
+
+    /* ===== Visor de fotos ===== */
+    var visor = document.getElementById('visor');
+    var visorImg = document.getElementById('visor-img');
+    document.getElementById('visor-cerrar').addEventListener('click', function () { visor.close(); });
+    visor.addEventListener('click', function (e) { if (e.target === visor) visor.close(); });
+
+    /* ===== Detalle de un viaje ===== */
+    var actual = null;
+
+    function pintarViaje(v) {
+      actual = v;
+      document.getElementById('v-nombre').textContent = v.nombre;
+      document.getElementById('v-desc').textContent = v.desc;
+
+      var datos = document.getElementById('v-datos');
+      datos.innerHTML = '';
+      [['Lugar', v.lugar], ['Duración', v.duracion], ['Nivel', v.nivel], ['Mejor época', v.epoca]]
+        .forEach(function (d) {
+          var div = document.createElement('div');
+          var dt = document.createElement('dt'); dt.textContent = d[0];
+          var dd = document.createElement('dd'); dd.textContent = d[1];
+          div.appendChild(dt); div.appendChild(dd);
+          datos.appendChild(div);
+        });
+
+      var gal = document.getElementById('v-fotos');
+      gal.innerHTML = '';
+      v.fotos.forEach(function (ruta, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'foto';
+        b.setAttribute('aria-label', 'Ampliar foto ' + (i + 1) + ' de ' + v.nombre);
+
+        var img = document.createElement('img');
+        img.alt = v.nombre + ', foto ' + (i + 1);
+        img.src = ruta;
+        img.addEventListener('error', function () {
+          b.removeChild(img);
+          b.disabled = true;
+          var vacia = document.createElement('div');
+          vacia.className = 'foto-vacia';
+          vacia.textContent = 'Falta la foto: ' + ruta;
+          b.appendChild(vacia);
+        });
+        b.appendChild(img);
+
+        b.addEventListener('click', function () {
+          visorImg.src = ruta;
+          visorImg.alt = img.alt;
+          visor.showModal();
+        });
+        gal.appendChild(b);
+      });
+    }
+
+    document.getElementById('volver').addEventListener('click', function () {
+      location.hash = '#informacion';
+    });
+
+    document.getElementById('v-pedir').addEventListener('click', function () {
+      if (actual) document.getElementById('destino').value = actual.nombre;
+      location.hash = '#contacto';
+    });
+
+    /* ===== Mostrar la sección según la dirección (#...) ===== */
+    function mostrar() {
+      var hash = location.hash.replace('#', '');
+      var id = hash;
+      var v = null;
+
+      if (hash.indexOf('viaje-') === 0) {
+        v = porId(hash.slice(6));
+        id = v ? 'viaje' : 'informacion';
+      }
+      if (secciones.indexOf(id) === -1) id = 'inicio';
+      if (v) pintarViaje(v);
+
+      secciones.forEach(function (s) {
+        document.getElementById(s).hidden = (s !== id);
+      });
+
+      var activo = (id === 'viaje') ? '#informacion' : '#' + id;
+      enlaces.forEach(function (a) {
+        if (a.getAttribute('href') === activo) a.setAttribute('aria-current', 'page');
+        else a.removeAttribute('aria-current');
+      });
+
+      window.scrollTo(0, 0);
+      actualizar();
+    }
+    window.addEventListener('hashchange', mostrar);
+    mostrar();
+
+    /* ===== Formulario de contacto ===== */
+    var form = document.getElementById('form-contacto');
+    var ok = document.getElementById('ok');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var nombre = form.nombre.value.trim();
+      var email = form.email.value.trim();
+
+      if (!nombre || !email || !form.email.checkValidity()) {
+        ok.hidden = false;
+        ok.textContent = 'Escribe tu nombre y un correo electrónico válido para continuar.';
+        (nombre ? form.email : form.nombre).focus();
+        return;
+      }
+
+      ok.hidden = false;
+      ok.textContent = 'Gracias, ' + nombre + '. Hemos recibido tus datos y te escribiremos a ' + email + '.';
+      form.reset();
+    });
+  })();
+</script>
+</body>
+</html>
